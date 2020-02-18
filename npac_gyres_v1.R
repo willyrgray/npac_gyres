@@ -14,7 +14,7 @@ id[i]<-paste(dat$core[i],"_",dat$species[i],sep="")
 dat<-cbind(dat,id)
 
 #select geographical domain 
-#to run code for all basin or just east/est of 180 degrees E set domain to 'ALL', 'WEST', or 'EAST 
+#for all basin set domain to 'ALL' or for east/est of 180 degrees E set domain to 'WEST', or 'EAST 
 DOMAIN<- 'ALL'
 #DOMAIN<- 'WEST'
 #DOMAIN<- 'EAST'
@@ -24,7 +24,7 @@ dat<- 	if(DOMAIN == 'ALL') {dat} else
 		if(DOMAIN == 'EAST') {subset(dat, lon_e < 0)}
 
 
-id_sum<-as.vector(unique(dat$id))
+id_sum<-as.vector(unique(dat$id)) #vector of individual record names to loop through later
 
 #import sea level/sst data
 #1 per mil ice volume plus global SST change from PMIP3 modelscaled to SL
@@ -103,9 +103,10 @@ for (it in 1: mcmc_iterations) {
 			b<-gam(d18o~s(age, k=k),data=d, method='REML')
 			int_d18o<-predict(b,newdata=data.frame(age=int_age), se.fit=FALSE)
 			Dd18Oesl<- Dd18Oesl_tot *(sl/Desl)
-			r3[i,]<- 	int_d18o + Dd18Oesl} 
+			r3[i,]<- 	int_d18o + Dd18Oesl
+			} 
 			else {r3[i,]<- NA}
-		}
+	}
 
 	r4<-matrix(ncol=length(int_age),nrow=length(seq(lat_s-delta_lat_max,lat_n-delta_lat_min,by=lat_res)))
 
@@ -119,7 +120,7 @@ for (it in 1: mcmc_iterations) {
 		pdat2<- data.frame(lat_int=seq(lat_s-delta_lat_max,lat_n-delta_lat_min,by=lat_res))
 		p_int<-as.numeric(predict(b_int,newdata=pdat2, se.fit=TRUE)$fit)
 		r4[,j]<- p_int
-		}
+	}
 
 
 	#delta_lat calculation
@@ -164,7 +165,7 @@ dev.new(width=5.7, height=4); par(mar=c(3.5,3.5,0.5,0.5)); par(mgp=c(1.5,0.5,0))
 plot(-99, -99, col=adjustcolor("grey99",alpha=0.01),type='o',xlim=c(20,10),ylim=c(-5,1), pch=1, bty='n', axes=TRUE, xlab='Age (ka)', ylab='∆Lat (°N)')
 polygon(x=c(results$age, rev(results$age)),y=c(results$DLat_lwr95, rev(results$DLat_upr95)),col = adjustcolor("grey67",alpha=0.3),border=NA)
 polygon(x=c(results$age, rev(results$age)),y=c(results$DLat_upr68, rev(results$DLat_lwr68)),col = adjustcolor("grey47",alpha=0.3),border=NA)  
-points(results$age, results$DLat, col=adjustcolor("grey17",alpha=0.9),type='l', pch=1, lwd=1.25)
+points(results$age, results$DLat, col=adjustcolor("grey17",alpha=0.9),type='l', pch=1, lwd=1.5)
 
 
 
