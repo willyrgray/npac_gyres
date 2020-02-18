@@ -24,8 +24,6 @@ dat<- 	if(DOMAIN == 'ALL') {dat} else
 		if(DOMAIN == 'EAST') {subset(dat, lon_e < 0)}
 
 
-id_sum<-as.vector(unique(dat$id)) #vector of individual record names to loop through later
-
 #import sea level/sst data
 #1 per mil ice volume plus global SST change from PMIP3 modelscaled to SL
 esl_dat<-read.csv("lambeck2014_esl.csv") #sea level data
@@ -166,8 +164,3 @@ plot(-99, -99, col=adjustcolor("grey99",alpha=0.01),type='o',xlim=c(20,10),ylim=
 polygon(x=c(results$age, rev(results$age)),y=c(results$DLat_lwr95, rev(results$DLat_upr95)),col = adjustcolor("grey67",alpha=0.3),border=NA)
 polygon(x=c(results$age, rev(results$age)),y=c(results$DLat_upr68, rev(results$DLat_lwr68)),col = adjustcolor("grey47",alpha=0.3),border=NA)  
 points(results$age, results$DLat, col=adjustcolor("grey17",alpha=0.9),type='l', pch=1, lwd=1.5)
-
-
-
-
-
